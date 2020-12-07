@@ -18,7 +18,18 @@ namespace Spotify_Copy
             BackColor = Color.DarkSlateGray;
             Font = new Font("Segoe MDL2 Assets", 12);
             MouseDown += LejatszoUI_MouseDown;
+            MouseClick += LejatszoUI_MouseClick;
             Text = text;
+        }
+
+        private void LejatszoUI_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && Text == "\uEDB5")
+            {
+              
+                
+               
+            };
         }
 
         private void LejatszoUI_MouseDown(object sender, MouseEventArgs e)
