@@ -9,6 +9,7 @@ namespace Spotify_Copy
     
     class Dal
     {
+        public int ID { get; set; }
 
         public string Eloado { get; set; }
 

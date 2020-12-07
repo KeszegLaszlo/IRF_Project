@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;//local adatbázis beolvasása miatt
 
 namespace Spotify_Copy
 {
@@ -24,10 +25,23 @@ namespace Spotify_Copy
            // panel2.Controls.Add(adat);
         }
 
-        private List<Dal> _sudokus = new List<Sudoku>();
-        private void LoadMusicData()
+        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|DataDirectory|\\ZeneAdatbazis.mdf\";Integrated Security=True");
+        SqlCommand cmd;
+        SqlDataReader dr;
+
+
+        private List<Dal> _sudokus = new List<Dal>();
+        private String LoadMusicData()
         {
-            throw new NotImplementedException();
+            //Az adatbázisból való beolvasás
+            con.Open();
+            String sytnax = "SELECT DalCíme FROM Zene where DalID=2";
+            cmd = new SqlCommand(sytnax, con);
+            dr = cmd.ExecuteReader();
+            dr.Read();
+            
+            return dr[0].ToString();
+
         }
 
         private void CreateUiFieldLabel()
