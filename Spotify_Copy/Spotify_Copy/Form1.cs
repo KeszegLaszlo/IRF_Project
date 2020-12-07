@@ -16,12 +16,45 @@ namespace Spotify_Copy
         public Form1()
         {
             InitializeComponent();
-            CreateUiField();
-            //LejatszoUI gomb = new LejatszoUI("\uEDB5");
-            //panel1.Controls.Add(gomb);
+            CreateUiFieldButton();
+            CreateUiFieldLabel();
+            LoadMusicData();
+           // DalInfo adat = new DalInfo("Justin Bieber");
+           // adat.meret = 12;
+           // panel2.Controls.Add(adat);
         }
 
-        private void CreateUiField()
+        private List<Dal> _sudokus = new List<Sudoku>();
+        private void LoadMusicData()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CreateUiFieldLabel()
+        {
+            //A szerő és a dal címének a megjelenítése
+            // ?? hogyan lehet változtatni a label tulajdonságait kódban, hiszen readonly +középre
+
+            
+            int lineWidht = 10;
+            
+            for (int row = 0; row < 2; row++)
+            {
+                for (int col = 0; col < 1; col++)
+                {
+                    
+                    DalInfo sf = new DalInfo("Justin Bieber");
+
+                    
+                    sf.Left = col * sf.Width + (int)(Math.Floor((double)(col / 1))) * lineWidht;
+                    sf.Top = row * sf.Height + (int)(Math.Floor((double)(row / 1))) * lineWidht;
+                    panel2.Controls.Add(sf);
+                    
+                }
+            }
+        }
+
+        private void CreateUiFieldButton()
         {
             string[] ikonok = new string[6];
             ikonok[0] = "\uEDB5";
@@ -29,7 +62,7 @@ namespace Spotify_Copy
             ikonok[2] = "\uEB51";
             ikonok[3] = "\uE892";
             ikonok[4] = "\uE893";
-            ikonok[5] = "\uE8B1";
+            ikonok[5] = "\uE724	";
 
             int lineWidht = 5;
             int ikonIndex = 0;
