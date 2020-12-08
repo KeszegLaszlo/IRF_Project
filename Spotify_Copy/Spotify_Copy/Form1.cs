@@ -33,7 +33,27 @@ namespace Spotify_Copy
         SqlCommand cmd;
         SqlDataReader dr;
         
+        private  void CSV (List<Dal> dal,string filepath)
+        {
+            try
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath,false))
+                {
+                    
+                    for (int i = 0; i <dal.Count ; i++)
+                    {
+                        file.WriteLine(dal[i].Eloado.ToString() + "," + dal[i].DalCime.ToString());
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
 
+                MessageBox.Show(ex.Message);
+            }
+
+        }
         private bool KedvencekKoze()
         {
             /*con.Open();
@@ -74,18 +94,20 @@ namespace Spotify_Copy
         }
         private String LoadMusicData()
         {
-           
-            //Az adatbázisból való beolvasás
-            con.Open();
-            String sytnax = String.Format("SELECT DalCíme FROM Zene where DalID={0}",IdIndexer);
-            cmd = new SqlCommand(sytnax, con);
-            dr = cmd.ExecuteReader();
-            dr.Read();
             
-            String temp = dr[0].ToString();
-            con.Close();
-          
-            return temp;
+                //Az adatbázisból való beolvasás
+                con.Open();
+                String sytnax = String.Format("SELECT DalCíme FROM Zene where DalID={0}", IdIndexer);
+                cmd = new SqlCommand(sytnax, con);
+                dr = cmd.ExecuteReader();
+                dr.Read();
+
+                String temp = dr[0].ToString();
+                con.Close();
+
+                return temp;
+            
+           
 
         }
         private String LoadEloado()
@@ -208,6 +230,7 @@ namespace Spotify_Copy
                 }
             }
 
+            IdIndexer = 2;
 
         }
 
@@ -215,15 +238,10 @@ namespace Spotify_Copy
         private void button2_Click(object sender, EventArgs e)
         {
 
-           
+            CSV(kedveltDalok, "teszt.txt");
             
 
-            for (int i = 0; i < kedveltDalok.Count; i++)
-            {
-                Console.WriteLine(kedveltDalok[i].Eloado + " ");
-                
-            }
-            Console.ReadLine();
+            
         }
     }
 }
