@@ -21,7 +21,8 @@ namespace Spotify_Copy
             
             CreateUiFieldButton();
             CreateUiFieldLabel();
-            
+            ListaFeltoltes();
+
            // DalInfo adat = new DalInfo("Justin Bieber");
            // adat.meret = 12;
            // panel2.Controls.Add(adat);
@@ -33,7 +34,44 @@ namespace Spotify_Copy
         SqlDataReader dr;
         
 
-        
+        private bool KedvencekKoze()
+        {
+            /*con.Open();
+            SqlCommand cmd = con.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = String.Format("insert into KedveltDal (DalFK) values ({0})", IdIndexer);
+            cmd.ExecuteNonQuery();
+            con.Close();
+            */
+            con.Open();
+            String sytnax = String.Format("SELECT Kedvelt FROM Zene where DalID={0}", IdIndexer);
+            cmd = new SqlCommand(sytnax, con);
+            dr = cmd.ExecuteReader();
+            dr.Read();
+
+            bool temp = (bool)dr[0];
+            con.Close();
+
+            return temp;
+
+
+        }
+        private int SorokSzama()
+        {
+
+            //Az adatbázisból való beolvasás
+            con.Open();
+            String sytnax = String.Format("SELECT COUNT(*) FROM Zene");
+            cmd = new SqlCommand(sytnax, con);
+            dr = cmd.ExecuteReader();
+            dr.Read();
+
+            int temp = (int)dr[0];
+            con.Close();
+
+            return temp;
+
+        }
         private String LoadMusicData()
         {
            
@@ -88,7 +126,7 @@ namespace Spotify_Copy
                     
                     sf.Left = col * sf.Width + (int)(Math.Floor((double)(col / 1))) * lineWidht;
                     sf.Top = row * sf.Height + (int)(Math.Floor((double)(row / 1))) * lineWidht;
-                    
+                  
                     panel2.Controls.Add(sf);
                     zeneIndex++;
                 }
@@ -140,6 +178,52 @@ namespace Spotify_Copy
             CreateUiFieldLabel();
             
 
+        }
+
+        private List<Dal> dalok = new List<Dal>();
+        private List<Dal> kedveltDalok = new List<Dal>();
+
+        private void ListaFeltoltes()
+        {
+            int hatar = SorokSzama();
+            for (int i = 0; i < hatar; i++)
+            {
+                Dal dal = new Dal(IdIndexer, LoadEloado(),LoadMusicData(),KedvencekKoze());
+                dalok.Add(dal);
+                IdIndexer++;
+                
+            }
+            int torlesHatar = dalok.Count; //Azért kell ,mert a másik for ciklusnál gondot okoz, ha menet közben törli ki
+
+            // kedveltDalok = dalok;
+            foreach (Dal item in dalok)
+            {
+                if (item.Kedvelt==false)
+                {
+                    //mivel hibát ad ki, ha töröljük a REMOVE paranccsal
+                }
+                else
+                {
+                    kedveltDalok.Add(item);
+                }
+            }
+
+
+        }
+
+        
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+           
+            
+
+            for (int i = 0; i < kedveltDalok.Count; i++)
+            {
+                Console.WriteLine(kedveltDalok[i].Eloado + " ");
+                
+            }
+            Console.ReadLine();
         }
     }
 }

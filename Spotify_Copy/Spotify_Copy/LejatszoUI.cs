@@ -26,9 +26,9 @@ namespace Spotify_Copy
         {
             if (e.Button == MouseButtons.Left && Text == "\uEDB5")
             {
-              
+                Form1 fr = new Form1();
                 
-               
+
             };
         }
 

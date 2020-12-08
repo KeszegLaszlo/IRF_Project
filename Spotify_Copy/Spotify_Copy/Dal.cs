@@ -14,5 +14,15 @@ namespace Spotify_Copy
         public string Eloado { get; set; }
 
         public string DalCime { get; set; }
+
+        public bool Kedvelt { get; set; }
+
+        public Dal(int ID,string Eloado,string DalCime,bool Kedvelt)
+        {
+            this.ID = ID;
+            this.Eloado = Eloado;
+            this.DalCime = DalCime;
+            this.Kedvelt = Kedvelt;
+        }
     }
 }
