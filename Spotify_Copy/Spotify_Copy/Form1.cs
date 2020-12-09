@@ -198,7 +198,7 @@ namespace Spotify_Copy
             LoadEloado();
             panel2.Controls.Clear();
             CreateUiFieldLabel();
-            
+           
 
         }
 
@@ -242,6 +242,29 @@ namespace Spotify_Copy
             
 
             
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            IdIndexer--;
+            LoadMusicData();
+            LoadEloado();
+            panel2.Controls.Clear();
+            CreateUiFieldLabel();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            bool teszt = !KedvencekKoze();
+            con.Open();
+            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}" ,teszt.ToString(), IdIndexer);
+            cmd = new SqlCommand(sytnax, con);
+            dr = cmd.ExecuteReader();
+            
+            con.Close();
+
+            MessageBox.Show(KedvencekKoze().ToString());
+
         }
     }
 }
