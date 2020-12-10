@@ -13,7 +13,7 @@ namespace Spotify_Copy
 {
     public partial class Form1 : Form
     {
-
+        public enum Jelek {uEDB5,uEDB4,uEB51,uE892, uE893, uE724 }
         public Form1()
         {
             InitializeComponent();
@@ -32,6 +32,7 @@ namespace Spotify_Copy
         SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|DataDirectory|\\ZeneAdatbazis.mdf\";Integrated Security=True");
         SqlCommand cmd;
         SqlDataReader dr;
+
         
         private  void CSV (List<Dal> dal,string filepath)
         {
@@ -176,9 +177,64 @@ namespace Spotify_Copy
                     sf.Left = col * sf.Width + (int)(Math.Floor((double)(col / 1))) * lineWidht;
                     sf.Top = row * sf.Height + (int)(Math.Floor((double)(row / 1))) * lineWidht;
                     panel1.Controls.Add(sf);
+
+                    if (ikonok[ikonIndex] == "\uEB51")
+                    {
+                        sf.MouseClick += Form1_MouseClick;
+                    }
+                    else if (ikonok[ikonIndex] == "\uE892")
+                    {
+                        sf.MouseClick += ElozoZene;
+                    }
+                    else if (ikonok[ikonIndex] == "\uE893")
+                    {
+                        sf.MouseClick += KovetkezoZene;
+                    }
+                    else if (ikonok[ikonIndex] == "\uE724	")
+                    {
+                        sf.MouseClick += ExportCSV;
+
+                    }
                     ikonIndex++;
                 }
             }
+        }
+
+        private void ExportCSV(object sender, MouseEventArgs e)
+        {
+            CSV(kedveltDalok, "Kedvelt_dalok.txt");
+        }
+
+        private void KovetkezoZene(object sender, MouseEventArgs e)
+        {
+            IdIndexer++;
+            LoadMusicData();
+            LoadEloado();
+            panel2.Controls.Clear();
+            CreateUiFieldLabel();
+        }
+
+        private void ElozoZene(object sender, MouseEventArgs e)
+        {
+            IdIndexer--;
+            LoadMusicData();
+            LoadEloado();
+            panel2.Controls.Clear();
+            CreateUiFieldLabel();
+        }
+
+        //Kedvel gomb eseménye
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            bool teszt = !KedvencekKoze();
+            con.Open();
+            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}", teszt.ToString(), IdIndexer);
+            cmd = new SqlCommand(sytnax, con);
+            cmd.ExecuteNonQuery();
+
+            con.Close();
+
+            MessageBox.Show(KedvencekKoze().ToString());
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -223,6 +279,7 @@ namespace Spotify_Copy
                 if (item.Kedvelt==false)
                 {
                     //mivel hibát ad ki, ha töröljük a REMOVE paranccsal
+                    //inverz
                 }
                 else
                 {
@@ -259,7 +316,7 @@ namespace Spotify_Copy
             con.Open();
             String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}" ,teszt.ToString(), IdIndexer);
             cmd = new SqlCommand(sytnax, con);
-            dr = cmd.ExecuteReader();
+            cmd.ExecuteNonQuery();
             
             con.Close();
 
