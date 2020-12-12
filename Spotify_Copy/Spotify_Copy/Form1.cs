@@ -13,7 +13,16 @@ namespace Spotify_Copy
 {
     public partial class Form1 : Form
     {
-        public enum Jelek {uEDB5,uEDB4,uEB51,uE892, uE893, uE724 }
+        //Változók
+        private int IdIndexer = 2;
+        private List<Dal> dalok = new List<Dal>();
+        private List<Dal> kedveltDalok = new List<Dal>();
+
+
+        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|DataDirectory|\\ZeneAdatbazis.mdf\";Integrated Security=True");
+        SqlCommand cmd;
+        SqlDataReader dr;
+
         public Form1()
         {
             InitializeComponent();
@@ -26,13 +35,7 @@ namespace Spotify_Copy
            // DalInfo adat = new DalInfo("Justin Bieber");
            // adat.meret = 12;
            // panel2.Controls.Add(adat);
-        }
-        private int IdIndexer = 2;
-
-        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|DataDirectory|\\ZeneAdatbazis.mdf\";Integrated Security=True");
-        SqlCommand cmd;
-        SqlDataReader dr;
-
+        } //Konstruktor
         
         private  void CSV (List<Dal> dal,string filepath)
         {
@@ -138,7 +141,7 @@ namespace Spotify_Copy
 
 
             int lineWidht = 10;
-           
+            panel2.BackColor = Color.Lavender;
             for (int row = 0; row < 2; row++)
             {
                 for (int col = 0; col < 1; col++)
@@ -158,6 +161,7 @@ namespace Spotify_Copy
 
         private void CreateUiFieldButton()
         {
+            panel1.BackColor = Color.LightBlue;
             string[] ikonok = new string[6];
             ikonok[0] = "\uEDB5";
             ikonok[1] = "\uEDB4";
@@ -181,6 +185,14 @@ namespace Spotify_Copy
                     if (ikonok[ikonIndex] == "\uEB51")
                     {
                         sf.MouseClick += Form1_MouseClick;
+                        if (KedvencekKoze())
+                        {
+                            sf.BackColor = Color.Red;
+                        }
+                        else
+                        {
+                            sf.BackColor = Color.DarkSlateGray;
+                        }
                     }
                     else if (ikonok[ikonIndex] == "\uE892")
                     {
@@ -191,26 +203,35 @@ namespace Spotify_Copy
                         sf.MouseClick += KovetkezoZene;
                     }
                     else if (ikonok[ikonIndex] == "\uE724	")
-                    {
+                  {
+                        panel1.Width = sf.Right;
+                        panel2.Width = sf.Right;
+                        
                         sf.MouseClick += ExportCSV;
+
 
                     }
                     ikonIndex++;
                 }
             }
+
+            
         }
 
         private void ExportCSV(object sender, MouseEventArgs e)
         {
             CSV(kedveltDalok, "Kedvelt_dalok.txt");
         }
-
+    
         private void KovetkezoZene(object sender, MouseEventArgs e)
         {
             IdIndexer++;
             LoadMusicData();
             LoadEloado();
             panel2.Controls.Clear();
+            //nem optimális, hogy mindig újraírjuk a panelt...
+            panel1.Controls.Clear();
+            CreateUiFieldButton();
             CreateUiFieldLabel();
         }
 
@@ -219,13 +240,17 @@ namespace Spotify_Copy
             IdIndexer--;
             LoadMusicData();
             LoadEloado();
-            panel2.Controls.Clear();
+           panel2.Controls.Clear();
+            panel1.Controls.Clear();
+           
+            CreateUiFieldButton();
             CreateUiFieldLabel();
         }
 
         //Kedvel gomb eseménye
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
+              
             bool teszt = !KedvencekKoze();
             con.Open();
             String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}", teszt.ToString(), IdIndexer);
@@ -234,7 +259,12 @@ namespace Spotify_Copy
 
             con.Close();
 
+            panel1.Controls.Clear();
+            CreateUiFieldButton();
+
             MessageBox.Show(KedvencekKoze().ToString());
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -247,20 +277,9 @@ namespace Spotify_Copy
            
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            IdIndexer++;
-            LoadMusicData();
-            LoadEloado();
-            panel2.Controls.Clear();
-            CreateUiFieldLabel();
-           
+       
 
-        }
-
-        private List<Dal> dalok = new List<Dal>();
-        private List<Dal> kedveltDalok = new List<Dal>();
-
+      
         private void ListaFeltoltes()
         {
             int hatar = SorokSzama();
@@ -292,36 +311,6 @@ namespace Spotify_Copy
         }
 
         
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-            CSV(kedveltDalok, "teszt.txt");
-            
-
-            
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            IdIndexer--;
-            LoadMusicData();
-            LoadEloado();
-            panel2.Controls.Clear();
-            CreateUiFieldLabel();
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            bool teszt = !KedvencekKoze();
-            con.Open();
-            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}" ,teszt.ToString(), IdIndexer);
-            cmd = new SqlCommand(sytnax, con);
-            cmd.ExecuteNonQuery();
-            
-            con.Close();
-
-            MessageBox.Show(KedvencekKoze().ToString());
-
-        }
+ 
     }
 }

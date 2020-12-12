@@ -11,6 +11,7 @@ namespace Spotify_Copy
     class LejatszoUI: Button
     {
         public string text { get; set; }
+        
         public LejatszoUI(string text)
         {
             Height = 70;
@@ -32,13 +33,13 @@ namespace Spotify_Copy
             };
         }
 
-        private void LejatszoUI_MouseDown(object sender, MouseEventArgs e)
+        public void LejatszoUI_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left&& Text == "\uEB51")
             {
                 BackColor = Color.DarkSlateGray;
-            };
-            if (e.Button == MouseButtons.Right && Text == "\uEB51")
+            }
+            else if (e.Button == MouseButtons.Right && Text == "\uEB51")
             {
                 BackColor = Color.Red;
 
