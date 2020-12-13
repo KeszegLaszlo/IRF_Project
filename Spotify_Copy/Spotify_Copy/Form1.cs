@@ -149,8 +149,8 @@ namespace Spotify_Copy
                     
                     DalInfo sf = new DalInfo(ZeneAdat[zeneIndex]);
 
-                    
-                    sf.Left = col * sf.Width + (int)(Math.Floor((double)(col / 1))) * lineWidht;
+
+                    sf.Left = col * +sf.Width + (int)(Math.Floor((double)(col / 1))) * lineWidht;
                     sf.Top = row * sf.Height + (int)(Math.Floor((double)(row / 1))) * lineWidht;
                   
                     panel2.Controls.Add(sf);
@@ -247,10 +247,8 @@ namespace Spotify_Copy
             CreateUiFieldLabel();
         }
 
-        //Kedvel gomb eseménye
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        private void Kedvel()
         {
-              
             bool teszt = !KedvencekKoze();
             con.Open();
             String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}", teszt.ToString(), IdIndexer);
@@ -258,7 +256,13 @@ namespace Spotify_Copy
             cmd.ExecuteNonQuery();
 
             con.Close();
+        }
+        //Kedvel gomb eseménye
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
 
+
+            Kedvel();
             panel1.Controls.Clear();
             CreateUiFieldButton();
 
