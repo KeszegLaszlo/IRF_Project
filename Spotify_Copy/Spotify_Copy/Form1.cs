@@ -98,19 +98,19 @@ namespace Spotify_Copy
         }
         private String LoadMusicData()
         {
+          
+            
+                //Az adatbázisból való beolvasás
+                con.Open();
+                String sytnax = String.Format("SELECT DalCíme FROM Zene where DalID={0}", IdIndexer);
+                cmd = new SqlCommand(sytnax, con);
+                dr = cmd.ExecuteReader();
+                dr.Read();
 
-            //Az adatbázisból való beolvasás
-            con.Open();
-            String sytnax = String.Format("SELECT DalCíme FROM Zene where DalID={0}", IdIndexer);
-            cmd = new SqlCommand(sytnax, con);
-            dr = cmd.ExecuteReader();
-            dr.Read();
+                String temp = dr[0].ToString();
+                con.Close();
 
-            String temp = dr[0].ToString();
-            con.Close();
-
-            return temp;
-
+                return temp;
 
 
         }
@@ -220,34 +220,76 @@ namespace Spotify_Copy
 
         private void ExportCSV(object sender, MouseEventArgs e)
         {
+            panel1.Controls.Clear();
+            panel2.Controls.Clear();
+            IdIndexer = 1;
+            CreateUiFieldButton();
+            CreateUiFieldLabel();
+            
             ListaFeltoltes();
-
+            
             CSV(dalok, "Kedvelt_dalok.txt");
+
+            MessageBox.Show("A kedvelt dalok sikeresen kimentve fájlba.");
         }
 
         private void KovetkezoZene(object sender, MouseEventArgs e)
         {
-            IdIndexer++;
-            LoadMusicData();
-            LoadEloado();
-            panel2.Controls.Clear();
-            //nem optimális, hogy mindig újraírjuk a panelt...
-            panel1.Controls.Clear();
-            CreateUiFieldButton();
-            CreateUiFieldLabel();
-            //IdIndexer++;
+            if (IdIndexer<SorokSzama())
+            {
+                IdIndexer++;
+                LoadMusicData();
+                LoadEloado();
+                panel2.Controls.Clear();
+                //nem optimális, hogy mindig újraírjuk a panelt...
+                panel1.Controls.Clear();
+                CreateUiFieldButton();
+                CreateUiFieldLabel();
+                //IdIndexer++;
+            }
+            else
+            {
+                IdIndexer = 0;//Azért 0,hogy ne maradjon ki az első elem
+                IdIndexer++;
+                LoadMusicData();
+                LoadEloado();
+                panel2.Controls.Clear();
+             
+                panel1.Controls.Clear();
+                CreateUiFieldButton();
+                CreateUiFieldLabel();
+               
+            }
+
         }
 
         private void ElozoZene(object sender, MouseEventArgs e)
         {
-            IdIndexer--;
-            LoadMusicData();
-            LoadEloado();
-            panel2.Controls.Clear();
-            panel1.Controls.Clear();
+            if (IdIndexer>1)
+            {
+                IdIndexer--;
+                LoadMusicData();
+                LoadEloado();
+                panel2.Controls.Clear();
+                panel1.Controls.Clear();
 
-            CreateUiFieldButton();
-            CreateUiFieldLabel();
+                CreateUiFieldButton();
+                CreateUiFieldLabel();
+            }
+            else
+            {
+                IdIndexer = SorokSzama()+1;//Hogy ne maradjon ki az utolsó elem
+
+                IdIndexer--;
+                LoadMusicData();
+                LoadEloado();
+                panel2.Controls.Clear();
+                panel1.Controls.Clear();
+
+                CreateUiFieldButton();
+                CreateUiFieldLabel();
+            }
+            
 
         }
 
@@ -290,25 +332,34 @@ namespace Spotify_Copy
 
         private void ListaFeltoltes()
         {
-            dalok.Clear();
-            int hatar = SorokSzama();
-            IdIndexer = 1;
-            for (int i = 0; i < hatar; i++)
+            try
             {
-                Dal dal = new Dal(IdIndexer, LoadEloado(), LoadMusicData(), KedvencekKoze());
-                dalok.Add(dal);
-
-                IdIndexer++;
-            }
-            int torlesHatar = dalok.Count; //Azért kell ,mert a másik for ciklusnál gondot okoz, ha menet közben törli ki
-
-            for (int i = dalok.Count - 1; i >= 0; i--)
-            {
-                if (dalok[i].Kedvelt == false)
+                dalok.Clear();
+                int hatar = SorokSzama();
+                IdIndexer = 1;
+                for (int i = 0; i < hatar; i++)
                 {
-                    dalok.RemoveAt(i);
+                    Dal dal = new Dal(IdIndexer, LoadEloado(), LoadMusicData(), KedvencekKoze());
+                    dalok.Add(dal);
+
+                    IdIndexer++;
+                }
+                int torlesHatar = dalok.Count; //Azért kell ,mert a másik for ciklusnál gondot okoz, ha menet közben törli ki
+
+                for (int i = dalok.Count - 1; i >= 0; i--)
+                {
+                    if (dalok[i].Kedvelt == false)
+                    {
+                        dalok.RemoveAt(i);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+
+                MessageBox.Show(e.Message);
+            }
+            
 
 
 
