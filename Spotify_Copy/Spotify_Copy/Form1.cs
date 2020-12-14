@@ -19,7 +19,7 @@ namespace Spotify_Copy
         private List<Dal> kedveltDalok = new List<Dal>();
 
 
-        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|DataDirectory|\\ZeneAdatbazis.mdf\";Integrated Security=True");
+        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|Datadirectory|\\ZeneAdatbazis.mdf\";Integrated Security=True");
         SqlCommand cmd;
         SqlDataReader dr;
 
@@ -251,7 +251,7 @@ namespace Spotify_Copy
         {
             bool teszt = !KedvencekKoze();
             con.Open();
-            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}", teszt.ToString(), IdIndexer);
+            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  WHERE DalID = {1}", teszt.ToString(), IdIndexer);
             cmd = new SqlCommand(sytnax, con);
             cmd.ExecuteNonQuery();
 
@@ -265,7 +265,7 @@ namespace Spotify_Copy
             Kedvel();
             panel1.Controls.Clear();
             CreateUiFieldButton();
-
+         
             MessageBox.Show(KedvencekKoze().ToString());
 
 
