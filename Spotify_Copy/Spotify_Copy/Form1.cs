@@ -14,12 +14,12 @@ namespace Spotify_Copy
     public partial class Form1 : Form
     {
         //Változók
-        private int IdIndexer = 2;
+        private int IdIndexer = 1;
         private List<Dal> dalok = new List<Dal>();
         private List<Dal> kedveltDalok = new List<Dal>();
 
 
-        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"|Datadirectory|\\ZeneAdatbazis.mdf\";Integrated Security=True");
+        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Temp\\ZeneAdatbazis.mdf\";Integrated Security=True");
         SqlCommand cmd;
         SqlDataReader dr;
 
@@ -27,28 +27,28 @@ namespace Spotify_Copy
         {
             InitializeComponent();
 
-            
+
             CreateUiFieldButton();
             CreateUiFieldLabel();
             ListaFeltoltes();
 
-           // DalInfo adat = new DalInfo("Justin Bieber");
-           // adat.meret = 12;
-           // panel2.Controls.Add(adat);
+            // DalInfo adat = new DalInfo("Justin Bieber");
+            // adat.meret = 12;
+            // panel2.Controls.Add(adat);
         } //Konstruktor
-        
-        private  void CSV (List<Dal> dal,string filepath)
+
+        private void CSV(List<Dal> dal, string filepath)
         {
             try
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath,false))
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath, false))
                 {
-                    
-                    for (int i = 0; i <dal.Count ; i++)
+
+                    for (int i = 0; i < dal.Count; i++)
                     {
                         file.WriteLine(dal[i].Eloado.ToString() + "," + dal[i].DalCime.ToString());
                     }
-                    
+
                 }
             }
             catch (Exception ex)
@@ -98,27 +98,27 @@ namespace Spotify_Copy
         }
         private String LoadMusicData()
         {
-            
-                //Az adatbázisból való beolvasás
-                con.Open();
-                String sytnax = String.Format("SELECT DalCíme FROM Zene where DalID={0}", IdIndexer);
-                cmd = new SqlCommand(sytnax, con);
-                dr = cmd.ExecuteReader();
-                dr.Read();
 
-                String temp = dr[0].ToString();
-                con.Close();
+            //Az adatbázisból való beolvasás
+            con.Open();
+            String sytnax = String.Format("SELECT DalCíme FROM Zene where DalID={0}", IdIndexer);
+            cmd = new SqlCommand(sytnax, con);
+            dr = cmd.ExecuteReader();
+            dr.Read();
 
-                return temp;
-            
-           
+            String temp = dr[0].ToString();
+            con.Close();
+
+            return temp;
+
+
 
         }
         private String LoadEloado()
         {
             //Az adatbázisból az előadók való beolvasás
             con.Open();
-            String sytnax = String.Format("SELECT Eloadó FROM Zene where DalID={0}",IdIndexer);
+            String sytnax = String.Format("SELECT Eloado FROM Zene where DalID={0}", IdIndexer);
             cmd = new SqlCommand(sytnax, con);
             dr = cmd.ExecuteReader();
             dr.Read();
@@ -135,7 +135,7 @@ namespace Spotify_Copy
             ZeneAdat[0] = LoadEloado();
             ZeneAdat[1] = LoadMusicData();
             byte zeneIndex = 0;
-            
+
             //A szerő és a dal címének a megjelenítése
             // ?? hogyan lehet változtatni a label tulajdonságait kódban, hiszen readonly +középre
 
@@ -146,13 +146,13 @@ namespace Spotify_Copy
             {
                 for (int col = 0; col < 1; col++)
                 {
-                    
+
                     DalInfo sf = new DalInfo(ZeneAdat[zeneIndex]);
 
 
                     sf.Left = col * +sf.Width + (int)(Math.Floor((double)(col / 1))) * lineWidht;
                     sf.Top = row * sf.Height + (int)(Math.Floor((double)(row / 1))) * lineWidht;
-                  
+
                     panel2.Controls.Add(sf);
                     zeneIndex++;
                 }
@@ -203,10 +203,10 @@ namespace Spotify_Copy
                         sf.MouseClick += KovetkezoZene;
                     }
                     else if (ikonok[ikonIndex] == "\uE724	")
-                  {
+                    {
                         panel1.Width = sf.Right;
                         panel2.Width = sf.Right;
-                        
+
                         sf.MouseClick += ExportCSV;
 
 
@@ -215,14 +215,16 @@ namespace Spotify_Copy
                 }
             }
 
-            
+
         }
 
         private void ExportCSV(object sender, MouseEventArgs e)
         {
-            CSV(kedveltDalok, "Kedvelt_dalok.txt");
+            ListaFeltoltes();
+
+            CSV(dalok, "Kedvelt_dalok.txt");
         }
-    
+
         private void KovetkezoZene(object sender, MouseEventArgs e)
         {
             IdIndexer++;
@@ -233,6 +235,7 @@ namespace Spotify_Copy
             panel1.Controls.Clear();
             CreateUiFieldButton();
             CreateUiFieldLabel();
+            //IdIndexer++;
         }
 
         private void ElozoZene(object sender, MouseEventArgs e)
@@ -240,18 +243,19 @@ namespace Spotify_Copy
             IdIndexer--;
             LoadMusicData();
             LoadEloado();
-           panel2.Controls.Clear();
+            panel2.Controls.Clear();
             panel1.Controls.Clear();
-           
+
             CreateUiFieldButton();
             CreateUiFieldLabel();
+
         }
 
         private void Kedvel()
         {
             bool teszt = !KedvencekKoze();
             con.Open();
-            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  WHERE DalID = {1}", teszt.ToString(), IdIndexer);
+            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}", teszt.ToString(), IdIndexer);
             cmd = new SqlCommand(sytnax, con);
             cmd.ExecuteNonQuery();
 
@@ -265,56 +269,73 @@ namespace Spotify_Copy
             Kedvel();
             panel1.Controls.Clear();
             CreateUiFieldButton();
-         
-            MessageBox.Show(KedvencekKoze().ToString());
+
+
 
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
         public void LoadData()
         {
 
-           
+
         }
 
-       
 
-      
+
+
         private void ListaFeltoltes()
         {
+            dalok.Clear();
             int hatar = SorokSzama();
+            IdIndexer = 1;
             for (int i = 0; i < hatar; i++)
             {
-                Dal dal = new Dal(IdIndexer, LoadEloado(),LoadMusicData(),KedvencekKoze());
+                Dal dal = new Dal(IdIndexer, LoadEloado(), LoadMusicData(), KedvencekKoze());
                 dalok.Add(dal);
+
                 IdIndexer++;
-                
             }
             int torlesHatar = dalok.Count; //Azért kell ,mert a másik for ciklusnál gondot okoz, ha menet közben törli ki
 
-            // kedveltDalok = dalok;
-            foreach (Dal item in dalok)
+            for (int i = dalok.Count - 1; i >= 0; i--)
             {
-                if (item.Kedvelt==false)
+                if (dalok[i].Kedvelt == false)
                 {
-                    //mivel hibát ad ki, ha töröljük a REMOVE paranccsal
-                    //inverz
-                }
-                else
-                {
-                    kedveltDalok.Add(item);
+                    dalok.RemoveAt(i);
                 }
             }
 
-            IdIndexer = 2;
+
+
+            //dalok.ForEach(i => Console.WriteLine(i));
+            // kedveltDalok = dalok;
+
+            /*
+             foreach (Dal item in dalok)
+             {
+                 if (item.Kedvelt==false)
+                 {
+                     dalok.Remove(item);
+                 }
+                 else
+                 {
+
+                 }
+             }
+             KedveltListaFeltoltes();
+             */
+            IdIndexer = 1;
 
         }
 
-        
- 
+
+
+
+
     }
 }
