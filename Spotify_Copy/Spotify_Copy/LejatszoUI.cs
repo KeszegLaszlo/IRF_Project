@@ -30,7 +30,7 @@ namespace Spotify_Copy
                 Form1 fr = new Form1();
                 
 
-            };
+            }
         }
 
         public void LejatszoUI_MouseDown(object sender, MouseEventArgs e)

@@ -13,15 +13,26 @@ namespace Spotify_Copy
 {
     public partial class Form1 : Form
     {
-        //Változók
+
+        //VÁLTOZÓK
+        #region Változók
+
         private int IdIndexer = 1;
         private List<Dal> dalok = new List<Dal>();
         private List<Dal> kedveltDalok = new List<Dal>();
 
+        #endregion
+
+        #region SQL Változók
 
         SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Temp\\ZeneAdatbazis.mdf\";Integrated Security=True");
         SqlCommand cmd;
         SqlDataReader dr;
+
+        #endregion
+
+        //KONSTRUKTOR
+        #region Konstruktor
 
         public Form1()
         {
@@ -32,41 +43,17 @@ namespace Spotify_Copy
             CreateUiFieldLabel();
             ListaFeltoltes();
 
-            // DalInfo adat = new DalInfo("Justin Bieber");
-            // adat.meret = 12;
-            // panel2.Controls.Add(adat);
-        } //Konstruktor
+            
+        } 
+        #endregion
 
-        private void CSV(List<Dal> dal, string filepath)
-        {
-            try
-            {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath, false))
-                {
+        //METÓDUSOK ÉS METÓDUSOK
+       
+        #region METÓDUSOK - ADATBÁZISBÓL OLVASÁS
 
-                    for (int i = 0; i < dal.Count; i++)
-                    {
-                        file.WriteLine(dal[i].Eloado.ToString() + "," + dal[i].DalCime.ToString());
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message);
-            }
-
-        }
         private bool KedvencekKoze()
         {
-            /*con.Open();
-            SqlCommand cmd = con.CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = String.Format("insert into KedveltDal (DalFK) values ({0})", IdIndexer);
-            cmd.ExecuteNonQuery();
-            con.Close();
-            */
+            
             con.Open();
             String sytnax = String.Format("SELECT Kedvelt FROM Zene where DalID={0}", IdIndexer);
             cmd = new SqlCommand(sytnax, con);
@@ -80,6 +67,7 @@ namespace Spotify_Copy
 
 
         }
+
         private int SorokSzama()
         {
 
@@ -96,6 +84,7 @@ namespace Spotify_Copy
             return temp;
 
         }
+
         private String LoadMusicData()
         {
           
@@ -114,6 +103,7 @@ namespace Spotify_Copy
 
 
         }
+
         private String LoadEloado()
         {
             //Az adatbázisból az előadók való beolvasás
@@ -127,6 +117,10 @@ namespace Spotify_Copy
             con.Close();
             return temp;
         }
+
+        #endregion
+
+        #region UI GENERÁLÁS
 
         private void CreateUiFieldLabel()
         {
@@ -218,6 +212,10 @@ namespace Spotify_Copy
 
         }
 
+        #endregion
+
+        #region ESEMÉNYEK
+
         private void ExportCSV(object sender, MouseEventArgs e)
         {
             panel1.Controls.Clear();
@@ -293,17 +291,6 @@ namespace Spotify_Copy
 
         }
 
-        private void Kedvel()
-        {
-            bool teszt = !KedvencekKoze();
-            con.Open();
-            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}", teszt.ToString(), IdIndexer);
-            cmd = new SqlCommand(sytnax, con);
-            cmd.ExecuteNonQuery();
-
-            con.Close();
-        }
-        //Kedvel gomb eseménye
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
 
@@ -321,14 +308,27 @@ namespace Spotify_Copy
         {
 
         }
+
+        #endregion
+
+        #region METÓDUSOK
+
         public void LoadData()
         {
 
 
         }
 
+        private void Kedvel()
+        {
+            bool teszt = !KedvencekKoze();
+            con.Open();
+            String sytnax = String.Format("UPDATE Zene SET Kedvelt = '{0}'  Where DalID={1}", teszt.ToString(), IdIndexer);
+            cmd = new SqlCommand(sytnax, con);
+            cmd.ExecuteNonQuery();
 
-
+            con.Close();
+        }
 
         private void ListaFeltoltes()
         {
@@ -383,8 +383,33 @@ namespace Spotify_Copy
             IdIndexer = 1;
 
         }
+        #endregion
 
+        #region FÜGGVÉNY
 
+        private void CSV(List<Dal> dal, string filepath)
+        {
+            try
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath, false))
+                {
+
+                    for (int i = 0; i < dal.Count; i++)
+                    {
+                        file.WriteLine(dal[i].Eloado.ToString() + "," + dal[i].DalCime.ToString());
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        #endregion
 
 
 

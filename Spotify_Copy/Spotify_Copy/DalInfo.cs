@@ -16,7 +16,7 @@ namespace Spotify_Copy
         {
             Height = 30;
             Width = 240;
-            Font = new Font("Times New Roman", 14);
+             Font = new Font("Times New Roman", 14);
             Text = text;
             TextAlign = ContentAlignment.MiddleCenter;
         }
