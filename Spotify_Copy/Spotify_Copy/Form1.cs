@@ -19,7 +19,7 @@ namespace Spotify_Copy
 
         private int IdIndexer = 1;
         private List<Dal> dalok = new List<Dal>();
-        private List<Dal> kedveltDalok = new List<Dal>();
+        //private List<Dal> kedveltDalok = new List<Dal>();
 
         #endregion
 
@@ -226,7 +226,7 @@ namespace Spotify_Copy
             
             ListaFeltoltes();
             
-            CSV(dalok, "Kedvelt_dalok.txt");
+            CSV(dalok, "Kedvelt_dalok.csv");
 
             MessageBox.Show("A kedvelt dalok sikeresen kimentve fájlba.");
         }
@@ -391,12 +391,12 @@ namespace Spotify_Copy
         {
             try
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath, false))
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filepath, false,Encoding.UTF8))
                 {
 
                     for (int i = 0; i < dal.Count; i++)
                     {
-                        file.WriteLine(dal[i].Eloado.ToString() + "," + dal[i].DalCime.ToString());
+                        file.WriteLine(dal[i].Eloado.ToString() + ";" + dal[i].DalCime.ToString());
                     }
 
                 }
