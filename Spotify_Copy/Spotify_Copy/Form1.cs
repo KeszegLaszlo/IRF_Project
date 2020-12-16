@@ -206,6 +206,10 @@ namespace Spotify_Copy
 
 
                     }
+                    else if (ikonok[ikonIndex] == "\uEDB5")
+                    {
+                        sf.MouseClick += Play;
+                    }
                     ikonIndex++;
                 }
             }
@@ -213,6 +217,7 @@ namespace Spotify_Copy
 
         }
 
+        
         #endregion
 
         #region ESEMÉNYEK
@@ -240,10 +245,10 @@ namespace Spotify_Copy
                 LoadMusicData();
                 LoadEloado();
                 panel2.Controls.Clear();
-                //nem optimális, hogy mindig újraírjuk a panelt...
                 panel1.Controls.Clear();
                 CreateUiFieldButton();
                 CreateUiFieldLabel();
+                
                 //IdIndexer++;
             }
             else
@@ -310,6 +315,13 @@ namespace Spotify_Copy
 
         }
 
+        private void Play(object sender, MouseEventArgs e)
+        {
+            Jelzes pop = new Jelzes();
+            pop.Show();
+            WaitSomeTime(pop);
+        }
+       
         #endregion
 
         #region METÓDUSOK
@@ -331,6 +343,7 @@ namespace Spotify_Copy
             con.Close();
         }
 
+        // LISTÁBÓL VALÓ TÖRLÉS VALAMILYEN PARAMÉTER ALAPJÁN
         private void ListaFeltoltes()
         {
             try
@@ -347,7 +360,7 @@ namespace Spotify_Copy
                 }
                 int torlesHatar = dalok.Count; //Azért kell ,mert a másik for ciklusnál gondot okoz, ha menet közben törli ki
 
-                // LISTÁBÓL VALÓ TÖRLÉS VALAMILYEN PARAMÉTER ALAPJÁN
+                
                 for (int i = dalok.Count - 1; i >= 0; i--)
                 {
                     if (dalok[i].Kedvelt == false)
@@ -384,7 +397,7 @@ namespace Spotify_Copy
              */
             IdIndexer = 1;
 
-        }
+        } 
         #endregion
 
         #region FÜGGVÉNY
@@ -412,10 +425,13 @@ namespace Spotify_Copy
             }
 
         }
+        public async void WaitSomeTime(Form item)
+        {
+            await Task.Delay(500);
+            item.Close();
+        }
 
         #endregion
-
-
 
     }
 }
