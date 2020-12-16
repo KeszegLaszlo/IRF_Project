@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;//local adatbázis beolvasása miatt
+using System.IO;
 
 namespace Spotify_Copy
 {
@@ -24,7 +25,7 @@ namespace Spotify_Copy
         #endregion
 
         #region SQL Változók
-
+        // ADATBÁZISBÓL VALÓ BEOLVASÁS 
         SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Temp\\ZeneAdatbazis.mdf\";Integrated Security=True");
         SqlCommand cmd;
         SqlDataReader dr;
@@ -121,7 +122,7 @@ namespace Spotify_Copy
         #endregion
 
         #region UI GENERÁLÁS
-
+        // UI KÓDBÓL VALÓ GENERÁLÁSA
         private void CreateUiFieldLabel()
         {
             //Itt töltuk fel a tömböt az adatbázisból kiynert adatokkal
@@ -225,7 +226,7 @@ namespace Spotify_Copy
             CreateUiFieldLabel();
             
             ListaFeltoltes();
-            
+           
             CSV(dalok, "Kedvelt_dalok.csv");
 
             MessageBox.Show("A kedvelt dalok sikeresen kimentve fájlba.");
@@ -346,6 +347,7 @@ namespace Spotify_Copy
                 }
                 int torlesHatar = dalok.Count; //Azért kell ,mert a másik for ciklusnál gondot okoz, ha menet közben törli ki
 
+                // LISTÁBÓL VALÓ TÖRLÉS VALAMILYEN PARAMÉTER ALAPJÁN
                 for (int i = dalok.Count - 1; i >= 0; i--)
                 {
                     if (dalok[i].Kedvelt == false)
@@ -387,6 +389,8 @@ namespace Spotify_Copy
 
         #region FÜGGVÉNY
 
+
+       // CSV ÍRÁS
         private void CSV(List<Dal> dal, string filepath)
         {
             try
